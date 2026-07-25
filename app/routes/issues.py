@@ -15,6 +15,18 @@ async def get_issues():
     return issues
 
 
+@router.get("/{issue_id}", response_model=IssueOut)
+async def get_issue_by_id(issue_id: str):
+    """Retrieve a specific issue by ID."""
+    issues = load_data()
+    issue = next((issue for issue in issues if issue["id"] == issue_id), None)
+    if not issue:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Issue not found"
+        )
+    return issue
+
+
 @router.post("/", response_model=IssueOut, status_code=status.HTTP_201_CREATED)
 async def create_issue(payload: IssueCreate):
     """Create a new issue."""
@@ -29,3 +41,31 @@ async def create_issue(payload: IssueCreate):
     issues.append(new_issue)
     save_data(issues)
     return new_issue
+
+
+@router.put("/{issue_id}", response_model=IssueOut)
+async def update_issue_by_id(issue_id: str, payload: IssueUpdate):
+    """Partially update an issue. Send only the fields you want to change."""
+    issues = load_data()
+    issue = next((issue for issue in issues if issue["id"] == issue_id), None)
+    if not issue:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Issue not found"
+        )
+    issue.update(payload.model_dump(exclude_unset=True, exclude_none=True))
+    save_data(issues)
+    return issue
+
+
+@router.delete("/{issue_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_issue_by_id(issue_id: str):
+    """Delete a specific issue by ID."""
+    issues = load_data()
+    issue = next((issue for issue in issues if issue["id"] == issue_id), None)
+    if not issue:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Issue not found"
+        )
+    issues.remove(issue)
+    save_data(issues)
+
