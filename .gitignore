@@ -68,3 +68,14 @@ Desktop.ini
 .uv/
 pip-log.txt
 pip-delete-this-directory.txt
+
+# Node / frontend (Vite)
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class IssueStatus(str, Enum):
@@ -29,6 +29,7 @@ class IssueUpdate(BaseModel):
 
 
 class IssueOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: str
     title: str
     description: str
